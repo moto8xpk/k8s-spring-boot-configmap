@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      serviceAccountName: my-app-sa
+      containers:
+        - name: my-app-container
+          image: my-app:9.9.18
+          imagePullPolicy: IfNotPresent
+          command: ["java", "-jar", "/app/my-app.jar"]
+          ports:
+            - containerPort: 8078
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+              subPath: application.yml
+          env:
+            - name: SPRING_CONFIG_LOCATION
+              value: "optional:classpath:/,optional:file:/config/application.yml"
+            - name: GREETING_MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: my-app-env-config
+                  key: GREETING_MESSAGE
+
+          # Thêm health check
+          livenessProbe:
+            httpGet:
+              path: /actuator/health # Endpoint health của ứng dụng
+              port: 8078
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8078
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: my-app-env-config

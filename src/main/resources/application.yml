@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: "hello"
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    kubernetes:
+      config:
+        enabled: true
+      reload:
+        enabled: true
+        strategy: restart_context
+        mode: event
+server:
+  port: 8078
+
+greeting:
+  message: ${GREETING_MESSAGE:Hello Default}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, info, shutdown
