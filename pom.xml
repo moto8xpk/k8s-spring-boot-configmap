@@ -90,4 +90,35 @@
         </plugins>
     </build>
 
+    <profiles>
+             <profile>
+                 <id>custom-package</id>
+                 <activation>
+                     <property>
+                         <name>packaging.type</name>
+                     </property>
+                 </activation>
+                 <properties>
+                     <maven.test.skip>true</maven.test.skip>
+                 </properties>
+                 <build>
+                     <finalName>${project.artifactId}</finalName>
+                     <plugins>
+                         <plugin>
+                             <groupId>org.apache.maven.plugins</groupId>
+                             <artifactId>maven-jar-plugin</artifactId>
+                             <version>3.2.0</version>
+                             <executions>
+                                 <execution>
+                                     <goals>
+                                         <goal>${packaging.type}</goal>
+                                     </goals>
+                                 </execution>
+                             </executions>
+                         </plugin>
+                     </plugins>
+                 </build>
+             </profile>
+    </profiles>
+
 </project>
