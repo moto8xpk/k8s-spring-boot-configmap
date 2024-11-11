@@ -257,7 +257,7 @@
             </build>
 		</profile>
 		<profile>
-			<id>dev</id>
+			<id>jar</id>
 			<!-- <activation>
 				<activeByDefault>true</activeByDefault>
 			</activation> -->
@@ -276,7 +276,7 @@
 		</profile>
 
 		<profile>
-			<id>prod</id>
+			<id>war</id>
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
 				<packaging.type>war</packaging.type>
